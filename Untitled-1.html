@@ -1,0 +1,202 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <meta name="theme-color" content="#111111">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Super Course</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      
+      margin: 0;
+      background: #111;
+      color: white;
+      text-align: center;
+      font-family: Arial;
+      touch-action: none;
+    }
+
+    h1 {
+      color: yellow;
+      font-size: 25px;
+    }
+
+    canvas {
+      display: block;
+      width: min(95vw, 360px);
+      height: auto;
+      margin: auto;
+      border: 3px solid white;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin: 15px;
+    }
+
+    button {
+      font-size: 35px;
+      padding: 12px 35px;
+      border: none;
+      border-radius: 15px;
+      background: #ffcc00;
+      touch-action: none;
+    }
+
+    #restart {
+      font-size: 18px;
+    }
+  
+
+</style>
+</head>
+<body>
+
+<h1>🏎️ SUPER COURSE</h1>
+<p>Score : <span id="score">0</span></p>
+
+<canvas id="game" width="360" height="550"></canvas>
+
+<div class="controls">
+<button id="left">⬅️</button>
+<button id="right">➡️</button>
+</div>
+
+<button id="restart">RECOMMENCER</button>
+
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+let player = 157;
+let enemies = [];
+let score = 0;
+let speed = 4;
+let over = false;
+let animation;
+let left = false;
+let right = false;
+
+function control(id, direction) {
+  const button = document.getElementById(id);
+
+  button.addEventListener("pointerdown", e => {
+    e.preventDefault();
+    if(direction < 0) left = true;
+    else right = true;
+  });
+
+  function stop(e) {
+    if(direction < 0) left = false;
+    else right = false;
+  }
+
+  button.addEventListener("pointerup", stop);
+  button.addEventListener("pointercancel", stop);
+  button.addEventListener("pointerleave", stop);
+}
+
+control("left", -1);
+control("right", 1);
+
+document.addEventListener("keydown", e => {
+  if(e.key === "ArrowLeft") left = true;
+  if(e.key === "ArrowRight") right = true;
+});
+document.addEventListener("keyup", e => {
+  if(e.key === "ArrowLeft") left = false;
+  if(e.key === "ArrowRight") right = false;
+});
+
+function restart() {
+  cancelAnimationFrame(animation);
+  player = 157;
+  enemies = [];
+  score = 0;
+  speed = 4;
+  over = false;
+  left = false;
+  right = false;
+  loop();
+}
+
+document.getElementById("restart").onclick = restart;
+
+function loop() {
+  if(over) return;
+
+  if(left) player -= 5;
+  if(right) player += 5;
+  player = Math.max(40, Math.min(275, player));
+
+  ctx.fillStyle = "#248b38";
+  ctx.fillRect(0,0,360,550);
+
+  ctx.fillStyle = "#444";
+  ctx.fillRect(35,0,290,550);
+
+  ctx.strokeStyle = "white";
+  ctx.lineWidth = 5;
+  ctx.setLineDash([25,20]);
+  ctx.beginPath();
+  ctx.moveTo(180,0);
+  ctx.lineTo(180,550);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  ctx.fillStyle = "#00aaff";
+  ctx.fillRect(player,450,45,75);
+  ctx.fillStyle = "lightblue";
+  ctx.fillRect(player+8,458,29,20);
+
+  if(Math.random() < 0.025) {
+    enemies.push({
+      x: 55 + Math.floor(Math.random()*3)*90,
+      y: -80
+    });
+  }
+
+  for(let car of enemies) {
+    car.y += speed;
+    ctx.fillStyle = "red";
+    ctx.fillRect(car.x,car.y,45,75);
+
+    if(car.x < player+45 &&
+       car.x+45 > player &&
+       car.y < 525 &&
+       car.y+75 > 450) {
+      over = true;
+    }
+  }
+
+  enemies = enemies.filter(car => car.y < 600);
+
+  score++;
+  document.getElementById("score").textContent =
+    Math.floor(score/10);
+
+  speed = 4 + score/500;
+
+  if(over) {
+    ctx.fillStyle = "yellow";
+    ctx.font = "bold 35px Arial";
+    ctx.fillText("GAME OVER",75,270);
+    return;
+  }
+
+  animation = requestAnimationFrame(loop);
+}
+
+loop();
+</script>
+</body>
+</html>
