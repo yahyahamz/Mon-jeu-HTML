@@ -8,168 +8,148 @@
 <title>Color Sort 3D</title>
 
 <style>
-* {
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-}
+* { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 
 body {
-  margin: 0;
-  min-height: 100vh;
-  font-family: Arial, sans-serif;
-  color: white;
-  background: radial-gradient(circle at top, #293d72, #10152d 75%);
-  display: flex;
-  justify-content: center;
-  overflow-x: hidden;
+  margin:0;
+  min-height:100vh;
+  font-family:Arial,sans-serif;
+  color:white;
+  background:radial-gradient(circle at top,#293d72,#10152d 75%);
+  display:flex;
+  justify-content:center;
 }
 
 .game {
-  width: 100%;
-  max-width: 500px;
-  min-height: 100vh;
-  padding: 25px 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  width:100%;
+  max-width:500px;
+  min-height:100vh;
+  padding:25px 16px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
 }
 
 h1 {
-  font-size: 34px;
-  margin: 15px 0 5px;
-  font-weight: 900;
-  background: linear-gradient(90deg, #40e0d0, #ffdb70);
-  color: transparent;
-  background-clip: text;
+  font-size:34px;
+  margin:15px 0 5px;
+  font-weight:900;
+  background:linear-gradient(90deg,#40e0d0,#ffdb70);
+  color:transparent;
+  background-clip:text;
 }
 
-.subtitle {
-  color: #b9c9ed;
-  margin-bottom: 20px;
-}
+.subtitle { color:#b9c9ed; margin-bottom:20px; }
 
 .stats {
-  width: 100%;
-  display: flex;
-  justify-content: space-around;
-  background: #ffffff12;
-  border: 1px solid #ffffff20;
-  padding: 14px;
-  border-radius: 16px;
-  margin-bottom: 25px;
+  width:100%;
+  display:flex;
+  justify-content:space-around;
+  background:#ffffff12;
+  border:1px solid #ffffff20;
+  padding:14px;
+  border-radius:16px;
+  margin-bottom:25px;
 }
 
-.stat {
-  text-align: center;
-  font-size: 13px;
-  color: #b9c9ed;
-}
+.stat { text-align:center; font-size:13px; color:#b9c9ed; }
 
 .stat strong {
-  display: block;
-  font-size: 21px;
-  color: white;
-  margin-top: 5px;
+  display:block;
+  font-size:21px;
+  color:white;
+  margin-top:5px;
 }
 
 #board {
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 22px 15px;
-  padding: 15px 0;
-  min-height: 300px;
+  width:100%;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  align-items:center;
+  gap:22px 15px;
+  padding:15px 0;
+  min-height:300px;
 }
 
 .tube {
-  width: 55px;
-  height: 170px;
-  border: 3px solid #d5e5ff99;
-  border-top: 0;
-  border-radius: 0 0 23px 23px;
-  display: flex;
-  flex-direction: column-reverse;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 5px 4px 7px;
-  cursor: pointer;
-  background: linear-gradient(90deg, #ffffff12, #ffffff05, #ffffff20);
-  box-shadow: inset 0 -8px 15px #ffffff12, 0 12px 20px #0005;
-  transition: transform .2s, border-color .2s;
+  width:55px;
+  height:170px;
+  border:3px solid #d5e5ff99;
+  border-top:0;
+  border-radius:0 0 23px 23px;
+  display:flex;
+  flex-direction:column-reverse;
+  align-items:center;
+  justify-content:flex-start;
+  padding:5px 4px 7px;
+  cursor:pointer;
+  background:linear-gradient(90deg,#ffffff12,#ffffff05,#ffffff20);
+  box-shadow:inset 0 -8px 15px #ffffff12,0 12px 20px #0005;
+  transition:transform .2s,border-color .2s;
 }
 
 .tube.selected {
-  transform: translateY(-13px);
-  border-color: #ffe66d;
+  transform:translateY(-13px);
+  border-color:#ffe66d;
 }
 
 .ball {
-  width: 40px;
-  height: 34px;
-  flex-shrink: 0;
-  border-radius: 50%;
-  margin-top: -1px;
-  box-shadow: inset -5px -5px 8px #0003,
-              inset 4px 4px 8px #ffffff66,
-              0 2px 4px #0004;
+  width:40px;
+  height:34px;
+  flex-shrink:0;
+  border-radius:50%;
+  margin-top:-1px;
+  box-shadow:inset -5px -5px 8px #0003,
+  inset 4px 4px 8px #ffffff66,0 2px 4px #0004;
 }
 
 .controls {
-  display: flex;
-  gap: 10px;
-  margin-top: 25px;
-  flex-wrap: wrap;
-  justify-content: center;
+  display:flex;
+  gap:10px;
+  margin-top:25px;
+  flex-wrap:wrap;
+  justify-content:center;
 }
 
 button {
-  border: 0;
-  padding: 13px 17px;
-  border-radius: 13px;
-  font-size: 14px;
-  font-weight: bold;
-  color: #14203b;
-  background: linear-gradient(135deg, #62e8db, #8bafff);
-  cursor: pointer;
-  box-shadow: 0 5px 15px #0004;
+  border:0;
+  padding:13px 17px;
+  border-radius:13px;
+  font-size:14px;
+  font-weight:bold;
+  color:#14203b;
+  background:linear-gradient(135deg,#62e8db,#8bafff);
+  cursor:pointer;
+  box-shadow:0 5px 15px #0004;
 }
 
-button:active {
-  transform: scale(.96);
-}
+button:active { transform:scale(.96); }
 
 .message {
-  margin-top: 20px;
-  min-height: 28px;
-  color: #ffe66d;
-  text-align: center;
-  font-weight: bold;
+  margin-top:20px;
+  min-height:28px;
+  color:#ffe66d;
+  text-align:center;
+  font-weight:bold;
 }
 
 .ad-space {
-  margin-top: 35px;
-  min-height: 70px;
-  width: 100%;
-  border: 1px dashed #ffffff35;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #8394ba;
-  font-size: 12px;
+  margin-top:35px;
+  min-height:70px;
+  width:100%;
+  border:1px dashed #ffffff35;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#8394ba;
+  font-size:12px;
 }
 
-@media(max-width: 360px) {
-  .tube {
-    width: 48px;
-    height: 155px;
-  }
-  .ball {
-    width: 34px;
-    height: 30px;
-  }
+@media(max-width:360px) {
+  .tube { width:48px; height:155px; }
+  .ball { width:34px; height:30px; }
 }
 </style>
 </head>
@@ -177,48 +157,40 @@ button:active {
 <body>
 <div class="game">
 
-  <h1>COLOR SORT 3D</h1>
-  <div class="subtitle">Trie les couleurs pour gagner !</div>
+<h1>COLOR SORT 3D</h1>
+<div class="subtitle">Trie les couleurs pour gagner !</div>
 
-  <div class="stats">
-    <div class="stat">NIVEAU<strong id="level">1</strong></div>
-    <div class="stat">COUPS<strong id="moves">0</strong></div>
-    <div class="stat">RECORD<strong id="record">1</strong></div>
-  </div>
+<div class="stats">
+  <div class="stat">NIVEAU<strong id="level">1</strong></div>
+  <div class="stat">COUPS<strong id="moves">0</strong></div>
+  <div class="stat">RECORD<strong id="record">1</strong></div>
+</div>
 
-  <div id="board"></div>
+<div id="board"></div>
 
-  <div class="controls">
-    <button onclick="undo()">↶ Annuler</button>
-    <button onclick="restart()">↻ Recommencer</button>
-    <button onclick="nextLevel()">Niveau suivant ➜</button>
-  </div>
+<div class="controls">
+  <button onclick="undo()">↶ Annuler</button>
+  <button onclick="restart()">↻ Recommencer</button>
+  <button onclick="nextLevel()">Niveau suivant ➜</button>
+  <button id="soundButton" onclick="toggleSound()">🔊 Son activé</button>
+</div>
 
-  <div class="message" id="message">
-    Choisis un tube pour commencer.
-  </div>
+<div class="message" id="message">
+  Choisis un tube pour commencer.
+</div>
 
-  <div class="ad-space">
-    Espace réservé à la publicité
-  </div>
+<div class="ad-space">Espace réservé à la publicité</div>
 
 </div>
 
 <script>
 const colors = [
-  "#ff4d6d", "#38bdf8", "#facc15",
-  "#a78bfa", "#34d399", "#fb923c",
-  "#f472b6", "#a3e635"
+  "#ff4d6d","#38bdf8","#facc15","#a78bfa",
+  "#34d399","#fb923c","#f472b6","#a3e635"
 ];
 
 const CAPACITY = 4;
-const STORAGE_LEVEL = "colorSortLevel";
-const STORAGE_RECORD = "colorSortRecord";
-
-let level = Math.max(
-  1, Number(localStorage.getItem(STORAGE_LEVEL)) || 1
-);
-
+let level = Math.max(1,Number(localStorage.getItem("colorSortLevel")) || 1);
 let tubes = [];
 let initialTubes = [];
 let selected = null;
@@ -226,106 +198,169 @@ let moves = 0;
 let history = [];
 let completed = false;
 
-function shuffle(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
+// ===== SONS ET MUSIQUE =====
+
+let audioContext = null;
+let soundEnabled = true;
+let musicTimer = null;
+let musicStarted = false;
+let musicStep = 0;
+
+const melody = [261.63,329.63,392,329.63,293.66,349.23,440,349.23];
+
+function prepareAudio() {
+  const Audio = window.AudioContext || window.webkitAudioContext;
+  if (!Audio) return false;
+
+  if (!audioContext) audioContext = new Audio();
+
+  if (audioContext.state === "suspended") {
+    audioContext.resume();
   }
-  return array;
+
+  return true;
 }
+
+function tone(frequency,duration,volume=0.08,type="sine") {
+  if (!soundEnabled || !prepareAudio()) return;
+
+  const oscillator = audioContext.createOscillator();
+  const gain = audioContext.createGain();
+  const now = audioContext.currentTime;
+
+  oscillator.type = type;
+  oscillator.frequency.setValueAtTime(frequency,now);
+
+  gain.gain.setValueAtTime(0.001,now);
+  gain.gain.linearRampToValueAtTime(volume,now+0.03);
+  gain.gain.exponentialRampToValueAtTime(0.001,now+duration);
+
+  oscillator.connect(gain);
+  gain.connect(audioContext.destination);
+
+  oscillator.start(now);
+  oscillator.stop(now+duration+0.05);
+}
+
+function startMusic() {
+  if (!soundEnabled || musicStarted) return;
+  if (!prepareAudio()) return;
+
+  musicStarted = true;
+  musicStep = 0;
+
+  musicTimer = setInterval(() => {
+    if (!soundEnabled) return;
+
+    tone(melody[musicStep % melody.length],0.30,0.025,"sine");
+    musicStep++;
+  },420);
+}
+
+function playSound(type) {
+  if (!soundEnabled) return;
+
+  startMusic();
+
+  if (type === "select") {
+    tone(480,0.10,0.09);
+  }
+
+  if (type === "move") {
+    tone(650,0.12,0.10);
+  }
+
+  if (type === "win") {
+    tone(523,0.20,0.10);
+    setTimeout(() => tone(659,0.20,0.10),180);
+    setTimeout(() => tone(784,0.35,0.10),360);
+  }
+}
+
+function toggleSound() {
+  soundEnabled = !soundEnabled;
+
+  const button = document.getElementById("soundButton");
+
+  if (!soundEnabled) {
+    if (musicTimer) clearInterval(musicTimer);
+    musicTimer = null;
+    musicStarted = false;
+    button.textContent = "🔇 Son coupé";
+  } else {
+    button.textContent = "🔊 Son activé";
+    prepareAudio();
+    startMusic();
+  }
+}
+
+// ===== JEU =====
 
 function copyTubes(value) {
   return value.map(tube => [...tube]);
 }
 
-// Génère un puzzle en partant d'une solution.
-// Chaque mouvement de mélange reste légal :
-// le puzzle obtenu peut donc toujours être résolu.
-
-function generatePuzzle() {
-  const count = Math.min(3 + level, colors.length);
-
-  const solved = [];
-
-  for (let i = 0; i < count; i++) {
-    solved.push([i, i, i, i]);
-  }
-
-  solved.push([]);
-  solved.push([]);
-
-  let puzzle;
-  let previousMove = null;
-
-  do {
-    puzzle = copyTubes(solved);
-    previousMove = null;
-
-    const scrambleMoves = 35 + count * 12 + level * 3;
-
-    for (let step = 0; step < scrambleMoves; step++) {
-      const possible = [];
-
-      for (let from = 0; from < puzzle.length; from++) {
-        if (puzzle[from].length === 0) continue;
-
-        for (let to = 0; to < puzzle.length; to++) {
-          if (from === to) continue;
-          if (puzzle[to].length >= CAPACITY) continue;
-
-          const color = puzzle[from][puzzle[from].length - 1];
-
-          if (
-            puzzle[to].length === 0 ||
-            puzzle[to][puzzle[to].length - 1] === color
-          ) {
-            if (
-              previousMove &&
-              previousMove.from === to &&
-              previousMove.to === from
-            ) {
-              continue;
-            }
-
-            possible.push({ from, to });
-          }
-        }
-      }
-
-      if (possible.length === 0) break;
-
-      const move = possible[
-        Math.floor(Math.random() * possible.length)
-      ];
-
-      puzzle[move.to].push(puzzle[move.from].pop());
-
-      previousMove = move;
-    }
-
-  } while (isSolved(puzzle));
-
-  return puzzle;
-}
-
 function isSolved(state) {
   return state.every(tube =>
     tube.length === 0 ||
-    (
-      tube.length === CAPACITY &&
-      tube.every(color => color === tube[0])
-    )
+    (tube.length === CAPACITY &&
+    tube.every(color => color === tube[0]))
   );
 }
 
-function newGame() {
-  tubes = generatePuzzle();
-  initialTubes = copyTubes(tubes);
-  moves = 0;
-  selected = null;
-  history = [];
-  completed = false;
+function generatePuzzle() {
+  const count = Math.min(3+level,colors.length);
+  const puzzle = [];
 
+  for (let i=0;i<count;i++) {
+    puzzle.push([i,i,i,i]);
+  }
+
+  puzzle.push([]);
+  puzzle.push([]);
+
+  let previousMove = null;
+
+  for (let step=0;step<35+count*12+level*3;step++) {
+    const possible = [];
+
+    for (let from=0;from<puzzle.length;from++) {
+      if (!puzzle[from].length) continue;
+
+      for (let to=0;to<puzzle.length;to++) {
+        if (from===to || puzzle[to].length>=CAPACITY) continue;
+
+        const color = puzzle[from][puzzle[from].length-1];
+
+        if (puzzle[to].length===0 ||
+            puzzle[to][puzzle[to].length-1]===color) {
+          if (previousMove &&
+              previousMove.from===to &&
+              previousMove.to===from) continue;
+
+          possible.push({from,to});
+        }
+      }
+    }
+
+    if (!possible.length) break;
+
+    const move=possible[Math.floor(Math.random()*possible.length)];
+    puzzle[move.to].push(puzzle[move.from].pop());
+    previousMove=move;
+  }
+
+  if (isSolved(puzzle)) return generatePuzzle();
+  return puzzle;
+}
+
+function newGame() {
+  tubes=generatePuzzle();
+  initialTubes=copyTubes(tubes);
+  moves=0;
+  selected=null;
+  history=[];
+  completed=false;
   update();
 
   document.getElementById("message").textContent =
@@ -333,31 +368,26 @@ function newGame() {
 }
 
 function update() {
-  document.getElementById("level").textContent = level;
-
-  document.getElementById("moves").textContent = moves;
-
+  document.getElementById("level").textContent=level;
+  document.getElementById("moves").textContent=moves;
   document.getElementById("record").textContent =
-    localStorage.getItem(STORAGE_RECORD) || 1;
+    localStorage.getItem("colorSortRecord") || 1;
 
-  const board = document.getElementById("board");
-  board.innerHTML = "";
+  const board=document.getElementById("board");
+  board.innerHTML="";
 
-  tubes.forEach((tube, index) => {
-    const element = document.createElement("div");
+  tubes.forEach((tube,index)=>{
+    const element=document.createElement("div");
+    element.className="tube"+(selected===index?" selected":"");
 
-    element.className = "tube" +
-      (selected === index ? " selected" : "");
-
-    tube.forEach(color => {
-      const ball = document.createElement("div");
-      ball.className = "ball";
-      ball.style.background = colors[color];
+    tube.forEach(color=>{
+      const ball=document.createElement("div");
+      ball.className="ball";
+      ball.style.background=colors[color];
       element.appendChild(ball);
     });
 
-    element.onclick = () => clickTube(index);
-
+    element.onclick=()=>clickTube(index);
     board.appendChild(element);
   });
 }
@@ -365,40 +395,39 @@ function update() {
 function clickTube(index) {
   if (completed) return;
 
-  document.getElementById("message").textContent = "";
+  startMusic();
+  document.getElementById("message").textContent="";
 
-  if (selected === null) {
-    if (tubes[index].length === 0) return;
+  if (selected===null) {
+    if (!tubes[index].length) return;
 
-    selected = index;
+    selected=index;
+    playSound("select");
     update();
     return;
   }
 
-  if (selected === index) {
-    selected = null;
+  if (selected===index) {
+    selected=null;
     update();
     return;
   }
 
-  const from = tubes[selected];
-  const to = tubes[index];
+  const from=tubes[selected];
+  const to=tubes[index];
 
-  if (from.length > 0 && to.length < CAPACITY) {
-    const color = from[from.length - 1];
+  if (from.length>0 && to.length<CAPACITY) {
+    const color=from[from.length-1];
 
-    if (
-      to.length === 0 ||
-      to[to.length - 1] === color
-    ) {
+    if (to.length===0 || to[to.length-1]===color) {
       history.push(copyTubes(tubes));
-
       to.push(from.pop());
       moves++;
+      playSound("move");
     }
   }
 
-  selected = null;
+  selected=null;
   update();
   checkWin();
 }
@@ -406,48 +435,46 @@ function clickTube(index) {
 function checkWin() {
   if (!isSolved(tubes)) return;
 
-  completed = true;
+  completed=true;
+  playSound("win");
 
   document.getElementById("message").textContent =
     "🎉 Bravo ! Niveau terminé !";
 
-  const record = Math.max(
+  const record=Math.max(
     level,
-    Number(localStorage.getItem(STORAGE_RECORD)) || 1
+    Number(localStorage.getItem("colorSortRecord")) || 1
   );
 
-  localStorage.setItem(STORAGE_RECORD, record);
-
-  document.getElementById("record").textContent = record;
+  localStorage.setItem("colorSortRecord",record);
+  document.getElementById("record").textContent=record;
 
   level++;
-  localStorage.setItem(STORAGE_LEVEL, level);
+  localStorage.setItem("colorSortLevel",level);
 
-  setTimeout(() => {
+  setTimeout(()=>{
     newGame();
     document.getElementById("message").textContent =
-      "⭐ Bien joué ! Voici le niveau suivant.";
-  }, 1800);
+      "⭐ Bravo ! Voici le niveau suivant.";
+  },1800);
 }
 
 function undo() {
-  if (completed || history.length === 0) return;
+  if (completed || !history.length) return;
 
-  tubes = history.pop();
-  moves = Math.max(0, moves - 1);
-  selected = null;
-
+  tubes=history.pop();
+  moves=Math.max(0,moves-1);
+  selected=null;
   update();
 }
 
 function restart() {
   if (completed) return;
 
-  tubes = copyTubes(initialTubes);
-  moves = 0;
-  selected = null;
-  history = [];
-
+  tubes=copyTubes(initialTubes);
+  moves=0;
+  selected=null;
+  history=[];
   update();
 
   document.getElementById("message").textContent =
@@ -455,18 +482,17 @@ function restart() {
 }
 
 function nextLevel() {
-  if (!completed) {
-    level++;
-    localStorage.setItem(STORAGE_LEVEL, level);
-    newGame();
+  if (completed) return;
 
-    document.getElementById("message").textContent =
-      "⭐ Nouveau niveau !";
-  }
+  level++;
+  localStorage.setItem("colorSortLevel",level);
+  newGame();
+
+  document.getElementById("message").textContent =
+    "⭐ Nouveau niveau !";
 }
 
 newGame();
 </script>
-
 </body>
 </html>
