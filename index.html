@@ -5,151 +5,104 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <meta name="theme-color" content="#10152d">
-<title>Color Sort 3D</title>
+<title>Color Sort 3D Premium</title>
 
 <style>
-* { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-
-body {
-  margin:0;
-  min-height:100vh;
-  font-family:Arial,sans-serif;
-  color:white;
-  background:radial-gradient(circle at top,#293d72,#10152d 75%);
-  display:flex;
-  justify-content:center;
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{
+ margin:0;background:radial-gradient(ellipse at top,#344e87,#11172e 70%);
+ font-family:Arial,sans-serif;color:white;min-height:100vh
 }
-
-.game {
-  width:100%;
-  max-width:500px;
-  min-height:100vh;
-  padding:25px 16px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
+.game{
+ max-width:520px;margin:auto;padding:20px 14px;min-height:100vh;
+ display:flex;flex-direction:column;align-items:center
 }
-
-h1 {
-  font-size:34px;
-  margin:15px 0 5px;
-  font-weight:900;
-  background:linear-gradient(90deg,#40e0d0,#ffdb70);
-  color:transparent;
-  background-clip:text;
+h1{
+ font-size:32px;margin:12px 0 4px;font-weight:1000;letter-spacing:1px;
+ background:linear-gradient(90deg,#52f4dd,#fff0a1,#8cb8ff);
+ background-clip:text;-webkit-background-clip:text;color:transparent;text-align:center
 }
-
-.subtitle { color:#b9c9ed; margin-bottom:20px; }
-
-.stats {
-  width:100%;
-  display:flex;
-  justify-content:space-around;
-  background:#ffffff12;
-  border:1px solid #ffffff20;
-  padding:14px;
-  border-radius:16px;
-  margin-bottom:25px;
+.subtitle{color:#b9c9ed;margin-bottom:18px;font-size:13px;text-align:center}
+.stats{width:100%;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{
+ background:#ffffff12;border:1px solid #ffffff20;border-radius:14px;
+ padding:12px;text-align:center;color:#aebfe3;font-size:11px
 }
-
-.stat { text-align:center; font-size:13px; color:#b9c9ed; }
-
-.stat strong {
-  display:block;
-  font-size:21px;
-  color:white;
-  margin-top:5px;
+.stat strong{display:block;color:white;font-size:21px;margin-top:5px}
+.coins{color:#ffe27a}
+.progress{width:100%;height:7px;background:#ffffff20;border-radius:10px;margin:17px 0 8px;overflow:hidden}
+.progress div{height:100%;width:0;background:linear-gradient(90deg,#36e4d1,#ffdc75);transition:width .3s}
+.levelText{font-size:12px;color:#c5d5f4;margin-bottom:15px}
+#board{
+ width:100%;min-height:310px;display:flex;flex-wrap:wrap;
+ justify-content:center;align-content:center;gap:25px 15px;padding:15px 0
 }
-
-#board {
-  width:100%;
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  align-items:center;
-  gap:22px 15px;
-  padding:15px 0;
-  min-height:300px;
+.tube{
+ width:57px;height:176px;border:3px solid #d5e9ff99;border-top:0;
+ border-radius:0 0 23px 23px;position:relative;display:flex;
+ flex-direction:column-reverse;align-items:center;justify-content:flex-start;
+ padding:5px 4px 7px;
+ background:linear-gradient(90deg,#ffffff22,#ffffff05 40%,#ffffff25);
+ box-shadow:inset 4px 0 8px #ffffff18,inset -4px 0 8px #ffffff15,0 13px 22px #0005;
+ cursor:pointer;transition:transform .2s,border-color .2s
 }
-
-.tube {
-  width:55px;
-  height:170px;
-  border:3px solid #d5e5ff99;
-  border-top:0;
-  border-radius:0 0 23px 23px;
-  display:flex;
-  flex-direction:column-reverse;
-  align-items:center;
-  justify-content:flex-start;
-  padding:5px 4px 7px;
-  cursor:pointer;
-  background:linear-gradient(90deg,#ffffff12,#ffffff05,#ffffff20);
-  box-shadow:inset 0 -8px 15px #ffffff12,0 12px 20px #0005;
-  transition:transform .2s,border-color .2s;
+.tube:before{
+ content:"";position:absolute;top:-3px;left:-3px;width:calc(100% + 6px);
+ height:5px;border:2px solid #d5e9ff99;border-radius:50%;background:#c9e6ff20
 }
-
-.tube.selected {
-  transform:translateY(-13px);
-  border-color:#ffe66d;
+.tube.selected{
+ transform:translateY(-15px);border-color:#ffe27a;
+ filter:drop-shadow(0 0 9px #ffe27a88)
 }
-
-.ball {
-  width:40px;
-  height:34px;
-  flex-shrink:0;
-  border-radius:50%;
-  margin-top:-1px;
-  box-shadow:inset -5px -5px 8px #0003,
-  inset 4px 4px 8px #ffffff66,0 2px 4px #0004;
+.ball{
+ width:42px;height:35px;flex-shrink:0;border-radius:50%;margin-top:-1px;
+ position:relative;box-shadow:inset -6px -6px 9px #0005,
+ inset 5px 5px 9px #ffffff88,0 2px 5px #0005;
+ animation:appear .18s ease-out
 }
-
-.controls {
-  display:flex;
-  gap:10px;
-  margin-top:25px;
-  flex-wrap:wrap;
-  justify-content:center;
+.ball:after{
+ content:"";position:absolute;top:5px;left:8px;width:12px;height:6px;
+ border-radius:50%;background:#ffffff80;filter:blur(1px)
 }
-
-button {
-  border:0;
-  padding:13px 17px;
-  border-radius:13px;
-  font-size:14px;
-  font-weight:bold;
-  color:#14203b;
-  background:linear-gradient(135deg,#62e8db,#8bafff);
-  cursor:pointer;
-  box-shadow:0 5px 15px #0004;
+@keyframes appear{from{transform:scale(.7)}to{transform:scale(1)}}
+.controls,.shop{
+ display:flex;flex-wrap:wrap;justify-content:center;gap:9px;margin-top:18px
 }
-
-button:active { transform:scale(.96); }
-
-.message {
-  margin-top:20px;
-  min-height:28px;
-  color:#ffe66d;
-  text-align:center;
-  font-weight:bold;
+button{
+ border:0;border-radius:13px;padding:13px 16px;font-weight:bold;
+ font-size:13px;color:#15203b;
+ background:linear-gradient(135deg,#62e8db,#9cbaff);
+ box-shadow:0 5px 14px #0004;cursor:pointer
 }
-
-.ad-space {
-  margin-top:35px;
-  min-height:70px;
-  width:100%;
-  border:1px dashed #ffffff35;
-  border-radius:12px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#8394ba;
-  font-size:12px;
+button:active{transform:scale(.95)}
+button.secondary{background:linear-gradient(135deg,#ffe38a,#ffb95e)}
+button.sound-on{background:linear-gradient(135deg,#75f0b0,#42c9a0)}
+button.sound-off{background:linear-gradient(135deg,#ffc4c4,#ff8585)}
+.message{
+ min-height:35px;text-align:center;color:#ffe27a;font-weight:bold;
+ margin-top:18px;font-size:14px
 }
-
-@media(max-width:360px) {
-  .tube { width:48px; height:155px; }
-  .ball { width:34px; height:30px; }
+.ad{
+ margin-top:auto;margin-top:25px;min-height:65px;width:100%;
+ border:1px dashed #ffffff35;border-radius:12px;display:flex;
+ align-items:center;justify-content:center;color:#8495ba;font-size:11px
+}
+.modal{
+ position:fixed;inset:0;background:#080e20dd;display:none;
+ align-items:center;justify-content:center;padding:20px;z-index:10
+}
+.modal.show{display:flex}
+.modalBox{
+ background:linear-gradient(145deg,#293e6e,#131d3a);
+ border:1px solid #ffffff35;border-radius:24px;padding:28px 20px;
+ text-align:center;width:100%;max-width:340px;box-shadow:0 20px 60px #0009
+}
+.modalBox h2{color:#ffe27a}
+.modalBox p{color:#c6d5f0;line-height:1.6}
+@media(max-width:360px){
+ .tube{width:49px;height:158px}
+ .ball{width:36px;height:30px}
+ .game{padding-left:9px;padding-right:9px}
 }
 </style>
 </head>
@@ -158,341 +111,521 @@ button:active { transform:scale(.96); }
 <div class="game">
 
 <h1>COLOR SORT 3D</h1>
-<div class="subtitle">Trie les couleurs pour gagner !</div>
+<div class="subtitle">THE PREMIUM PUZZLE EXPERIENCE</div>
 
 <div class="stats">
-  <div class="stat">NIVEAU<strong id="level">1</strong></div>
-  <div class="stat">COUPS<strong id="moves">0</strong></div>
-  <div class="stat">RECORD<strong id="record">1</strong></div>
+ <div class="stat">NIVEAU<strong id="level">1</strong></div>
+ <div class="stat">COUPS<strong id="moves">0</strong></div>
+ <div class="stat coins">🪙 PIÈCES<strong id="coins">0</strong></div>
 </div>
+
+<div class="progress"><div id="progressBar"></div></div>
+<div class="levelText" id="levelText">Progression du niveau</div>
 
 <div id="board"></div>
 
 <div class="controls">
-  <button onclick="undo()">↶ Annuler</button>
-  <button onclick="restart()">↻ Recommencer</button>
-  <button onclick="nextLevel()">Niveau suivant ➜</button>
-  <button id="soundButton" onclick="toggleSound()">🔊 Son activé</button>
+ <button onclick="undo()">↶ ANNULER</button>
+ <button onclick="restart()">↻ REJOUER</button>
+ <button class="secondary" onclick="nextLevel()">NIVEAU SUIVANT ➜</button>
 </div>
 
-<div class="message" id="message">
-  Choisis un tube pour commencer.
+<div class="shop">
+ <button onclick="addTube()">🧪 +1 TUBE (50 🪙)</button>
+ <button onclick="toggleSound()" id="soundBtn" class="sound-off">🔊 ACTIVER LE SON</button>
 </div>
 
-<div class="ad-space">Espace réservé à la publicité</div>
+<div class="message" id="message">Choisis un tube pour commencer !</div>
+<div class="ad">EMPLACEMENT PUBLICITAIRE</div>
+</div>
 
+<div class="modal" id="winModal">
+ <div class="modalBox">
+  <div style="font-size:55px">🏆</div>
+  <h2>NIVEAU TERMINÉ !</h2>
+  <p>Excellent travail ! Tu as gagné <strong>20 pièces</strong> !</p>
+  <button onclick="closeWin()">CONTINUER ➜</button>
+ </div>
 </div>
 
 <script>
-const colors = [
-  "#ff4d6d","#38bdf8","#facc15","#a78bfa",
-  "#34d399","#fb923c","#f472b6","#a3e635"
+"use strict";
+
+/* -----------------------------
+   CONFIGURATION DU JEU
+----------------------------- */
+
+const COLORS=[
+ "#ff4669","#35c5ff","#ffd23f","#aa7bff","#36dfa0",
+ "#ff8b38","#f36bc7","#b1ed45","#43e0d9","#ffbd91"
 ];
 
-const CAPACITY = 4;
-let level = Math.max(1,Number(localStorage.getItem("colorSortLevel")) || 1);
-let tubes = [];
-let initialTubes = [];
-let selected = null;
-let moves = 0;
-let history = [];
-let completed = false;
+const CAPACITY=4;
+const $=id=>document.getElementById(id);
 
-// ===== SONS ET MUSIQUE =====
+let level=Math.max(1,Number(localStorage.getItem("cs_level"))||1);
+let coins=Number(localStorage.getItem("cs_coins"))||0;
 
-let audioContext = null;
-let soundEnabled = true;
-let musicTimer = null;
-let musicStarted = false;
-let musicStep = 0;
+let tubes=[];
+let initial=[];
+let selected=null;
+let moves=0;
+let history=[];
+let completed=false;
+let extraTubes=0;
 
-const melody = [261.63,329.63,392,329.63,293.66,349.23,440,349.23];
+/* -----------------------------
+   SYSTEME AUDIO PROFESSIONNEL
+----------------------------- */
 
-function prepareAudio() {
-  const Audio = window.AudioContext || window.webkitAudioContext;
-  if (!Audio) return false;
+let soundEnabled=false;
+let audioContext=null;
+let musicTimer=null;
+let musicGain=null;
+let effectsGain=null;
 
-  if (!audioContext) audioContext = new Audio();
+const melody=[
+ 523.25,659.25,783.99,659.25,
+ 587.33,698.46,880.00,698.46,
+ 523.25,659.25,783.99,1046.50,
+ 880.00,783.99,659.25,587.33
+];
 
-  if (audioContext.state === "suspended") {
-    audioContext.resume();
+function initAudio(){
+ const AudioClass=window.AudioContext||window.webkitAudioContext;
+
+ if(!AudioClass)return false;
+
+ if(!audioContext){
+  audioContext=new AudioClass();
+
+  musicGain=audioContext.createGain();
+  musicGain.gain.value=0.55;
+  musicGain.connect(audioContext.destination);
+
+  effectsGain=audioContext.createGain();
+  effectsGain.gain.value=0.8;
+  effectsGain.connect(audioContext.destination);
+ }
+
+ if(audioContext.state==="suspended"){
+  audioContext.resume();
+ }
+
+ return true;
+}
+
+function playNote(frequency,start,duration,volume,type="sine"){
+ if(!audioContext||!musicGain)return;
+
+ const osc=audioContext.createOscillator();
+ const gain=audioContext.createGain();
+
+ osc.type=type;
+ osc.frequency.setValueAtTime(frequency,start);
+
+ gain.gain.setValueAtTime(0.001,start);
+ gain.gain.linearRampToValueAtTime(volume,start+0.035);
+ gain.gain.exponentialRampToValueAtTime(0.001,start+duration);
+
+ osc.connect(gain);
+ gain.connect(musicGain);
+
+ osc.start(start);
+ osc.stop(start+duration+0.03);
+}
+
+function playMusicPhrase(){
+ if(!soundEnabled||!audioContext)return;
+
+ const now=audioContext.currentTime+0.08;
+
+ melody.forEach((note,index)=>{
+  const time=now+index*0.24;
+
+  // Mélodie principale
+  playNote(note,time,0.28,0.045,"sine");
+
+  // Accompagnement doux
+  if(index%4===0){
+   playNote(note/2,time,0.65,0.018,"triangle");
+  }
+ });
+}
+
+function startMusic(){
+ if(!soundEnabled||!initAudio())return;
+
+ stopMusic();
+
+ playMusicPhrase();
+
+ // Nouvelle phrase musicale toutes les 3,9 secondes
+ musicTimer=setInterval(()=>{
+  if(soundEnabled)playMusicPhrase();
+ },3900);
+}
+
+function stopMusic(){
+ if(musicTimer){
+  clearInterval(musicTimer);
+  musicTimer=null;
+ }
+}
+
+function activateSound(){
+ soundEnabled=true;
+
+ if(!initAudio()){
+  $("message").textContent="Audio non disponible sur cet appareil.";
+  soundEnabled=false;
+  updateSoundButton();
+  return;
+ }
+
+ updateSoundButton();
+ startMusic();
+ playEffect(660,0.12,0.07);
+}
+
+function toggleSound(){
+ if(soundEnabled){
+  soundEnabled=false;
+  stopMusic();
+
+  if(musicGain&&audioContext){
+   musicGain.gain.setTargetAtTime(
+    0,audioContext.currentTime,0.08
+   );
   }
 
-  return true;
-}
+  updateSoundButton();
+ }else{
+  activateSound();
 
-function tone(frequency,duration,volume=0.08,type="sine") {
-  if (!soundEnabled || !prepareAudio()) return;
-
-  const oscillator = audioContext.createOscillator();
-  const gain = audioContext.createGain();
-  const now = audioContext.currentTime;
-
-  oscillator.type = type;
-  oscillator.frequency.setValueAtTime(frequency,now);
-
-  gain.gain.setValueAtTime(0.001,now);
-  gain.gain.linearRampToValueAtTime(volume,now+0.03);
-  gain.gain.exponentialRampToValueAtTime(0.001,now+duration);
-
-  oscillator.connect(gain);
-  gain.connect(audioContext.destination);
-
-  oscillator.start(now);
-  oscillator.stop(now+duration+0.05);
-}
-
-function startMusic() {
-  if (!soundEnabled || musicStarted) return;
-  if (!prepareAudio()) return;
-
-  musicStarted = true;
-  musicStep = 0;
-
-  musicTimer = setInterval(() => {
-    if (!soundEnabled) return;
-
-    tone(melody[musicStep % melody.length],0.30,0.025,"sine");
-    musicStep++;
-  },420);
-}
-
-function playSound(type) {
-  if (!soundEnabled) return;
-
-  startMusic();
-
-  if (type === "select") {
-    tone(480,0.10,0.09);
+  if(musicGain&&audioContext){
+   musicGain.gain.setTargetAtTime(
+    0.55,audioContext.currentTime,0.15
+   );
   }
-
-  if (type === "move") {
-    tone(650,0.12,0.10);
-  }
-
-  if (type === "win") {
-    tone(523,0.20,0.10);
-    setTimeout(() => tone(659,0.20,0.10),180);
-    setTimeout(() => tone(784,0.35,0.10),360);
-  }
+ }
 }
 
-function toggleSound() {
-  soundEnabled = !soundEnabled;
+function updateSoundButton(){
+ const btn=$("soundBtn");
 
-  const button = document.getElementById("soundButton");
-
-  if (!soundEnabled) {
-    if (musicTimer) clearInterval(musicTimer);
-    musicTimer = null;
-    musicStarted = false;
-    button.textContent = "🔇 Son coupé";
-  } else {
-    button.textContent = "🔊 Son activé";
-    prepareAudio();
-    startMusic();
-  }
+ if(soundEnabled){
+  btn.textContent="🔊 SON ACTIVÉ";
+  btn.className="sound-on";
+ }else{
+  btn.textContent="🔇 SON DÉSACTIVÉ";
+  btn.className="sound-off";
+ }
 }
 
-// ===== JEU =====
+function playEffect(frequency,duration=0.12,volume=0.07,type="sine"){
+ if(!soundEnabled||!audioContext||!effectsGain)return;
 
-function copyTubes(value) {
-  return value.map(tube => [...tube]);
+ const now=audioContext.currentTime;
+ const osc=audioContext.createOscillator();
+ const gain=audioContext.createGain();
+
+ osc.type=type;
+ osc.frequency.setValueAtTime(frequency,now);
+
+ gain.gain.setValueAtTime(0.001,now);
+ gain.gain.linearRampToValueAtTime(volume,now+0.015);
+ gain.gain.exponentialRampToValueAtTime(0.001,now+duration);
+
+ osc.connect(gain);
+ gain.connect(effectsGain);
+
+ osc.start(now);
+ osc.stop(now+duration+0.03);
 }
 
-function isSolved(state) {
-  return state.every(tube =>
-    tube.length === 0 ||
-    (tube.length === CAPACITY &&
-    tube.every(color => color === tube[0]))
-  );
+function soundSelect(){
+ playEffect(520,0.10,0.06);
 }
 
-function generatePuzzle() {
-  const count = Math.min(3+level,colors.length);
-  const puzzle = [];
-
-  for (let i=0;i<count;i++) {
-    puzzle.push([i,i,i,i]);
-  }
-
-  puzzle.push([]);
-  puzzle.push([]);
-
-  let previousMove = null;
-
-  for (let step=0;step<35+count*12+level*3;step++) {
-    const possible = [];
-
-    for (let from=0;from<puzzle.length;from++) {
-      if (!puzzle[from].length) continue;
-
-      for (let to=0;to<puzzle.length;to++) {
-        if (from===to || puzzle[to].length>=CAPACITY) continue;
-
-        const color = puzzle[from][puzzle[from].length-1];
-
-        if (puzzle[to].length===0 ||
-            puzzle[to][puzzle[to].length-1]===color) {
-          if (previousMove &&
-              previousMove.from===to &&
-              previousMove.to===from) continue;
-
-          possible.push({from,to});
-        }
-      }
-    }
-
-    if (!possible.length) break;
-
-    const move=possible[Math.floor(Math.random()*possible.length)];
-    puzzle[move.to].push(puzzle[move.from].pop());
-    previousMove=move;
-  }
-
-  if (isSolved(puzzle)) return generatePuzzle();
-  return puzzle;
+function soundMove(){
+ playEffect(720,0.14,0.075);
 }
 
-function newGame() {
-  tubes=generatePuzzle();
-  initialTubes=copyTubes(tubes);
-  moves=0;
-  selected=null;
-  history=[];
-  completed=false;
-  update();
-
-  document.getElementById("message").textContent =
-    "Choisis un tube pour commencer.";
+function soundError(){
+ playEffect(190,0.16,0.055,"triangle");
 }
 
-function update() {
-  document.getElementById("level").textContent=level;
-  document.getElementById("moves").textContent=moves;
-  document.getElementById("record").textContent =
-    localStorage.getItem("colorSortRecord") || 1;
-
-  const board=document.getElementById("board");
-  board.innerHTML="";
-
-  tubes.forEach((tube,index)=>{
-    const element=document.createElement("div");
-    element.className="tube"+(selected===index?" selected":"");
-
-    tube.forEach(color=>{
-      const ball=document.createElement("div");
-      ball.className="ball";
-      ball.style.background=colors[color];
-      element.appendChild(ball);
-    });
-
-    element.onclick=()=>clickTube(index);
-    board.appendChild(element);
-  });
+function soundUndo(){
+ playEffect(380,0.14,0.06);
 }
 
-function clickTube(index) {
-  if (completed) return;
+function soundVictory(){
+ if(!soundEnabled)return;
 
-  startMusic();
-  document.getElementById("message").textContent="";
+ const notes=[523.25,659.25,783.99,1046.50];
 
-  if (selected===null) {
-    if (!tubes[index].length) return;
-
-    selected=index;
-    playSound("select");
-    update();
-    return;
-  }
-
-  if (selected===index) {
-    selected=null;
-    update();
-    return;
-  }
-
-  const from=tubes[selected];
-  const to=tubes[index];
-
-  if (from.length>0 && to.length<CAPACITY) {
-    const color=from[from.length-1];
-
-    if (to.length===0 || to[to.length-1]===color) {
-      history.push(copyTubes(tubes));
-      to.push(from.pop());
-      moves++;
-      playSound("move");
-    }
-  }
-
-  selected=null;
-  update();
-  checkWin();
-}
-
-function checkWin() {
-  if (!isSolved(tubes)) return;
-
-  completed=true;
-  playSound("win");
-
-  document.getElementById("message").textContent =
-    "🎉 Bravo ! Niveau terminé !";
-
-  const record=Math.max(
-    level,
-    Number(localStorage.getItem("colorSortRecord")) || 1
-  );
-
-  localStorage.setItem("colorSortRecord",record);
-  document.getElementById("record").textContent=record;
-
-  level++;
-  localStorage.setItem("colorSortLevel",level);
-
+ notes.forEach((note,index)=>{
   setTimeout(()=>{
-    newGame();
-    document.getElementById("message").textContent =
-      "⭐ Bravo ! Voici le niveau suivant.";
-  },1800);
+   if(soundEnabled)playEffect(note,0.35,0.10);
+  },index*180);
+ });
 }
 
-function undo() {
-  if (completed || !history.length) return;
+/* -----------------------------
+   LOGIQUE DU JEU
+----------------------------- */
 
-  tubes=history.pop();
-  moves=Math.max(0,moves-1);
+function copy(array){
+ return array.map(tube=>[...tube]);
+}
+
+function solved(state){
+ return state.every(tube=>
+  !tube.length||
+  (tube.length===CAPACITY&&tube.every(c=>c===tube[0]))
+ );
+}
+
+function generate(){
+ const colorCount=Math.min(
+  3+Math.floor((level-1)/2),
+  COLORS.length
+ );
+
+ const puzzle=[];
+
+ for(let i=0;i<colorCount;i++){
+  puzzle.push([i,i,i,i]);
+ }
+
+ puzzle.push([],[]);
+
+ let last=null;
+ const shuffleSteps=Math.min(260,70+level*18);
+
+ for(let k=0;k<shuffleSteps;k++){
+  const choices=[];
+
+  for(let from=0;from<puzzle.length;from++){
+   if(!puzzle[from].length)continue;
+
+   for(let to=0;to<puzzle.length;to++){
+    if(from===to||puzzle[to].length>=CAPACITY)continue;
+
+    const color=puzzle[from][puzzle[from].length-1];
+
+    if(puzzle[to].length&&
+       puzzle[to][puzzle[to].length-1]!==color){
+     continue;
+    }
+
+    if(last&&last.from===to&&last.to===from)continue;
+
+    choices.push({from,to});
+   }
+  }
+
+  if(!choices.length)break;
+
+  const move=choices[Math.floor(Math.random()*choices.length)];
+
+  puzzle[move.to].push(puzzle[move.from].pop());
+  last=move;
+ }
+
+ return puzzle;
+}
+
+function start(){
+ tubes=generate();
+
+ for(let i=0;i<extraTubes;i++){
+  tubes.push([]);
+ }
+
+ initial=copy(tubes);
+ selected=null;
+ moves=0;
+ history=[];
+ completed=false;
+
+ $("winModal").classList.remove("show");
+ $("message").textContent="Choisis un tube pour commencer !";
+
+ update();
+}
+
+function update(){
+ $("level").textContent=level;
+ $("moves").textContent=moves;
+ $("coins").textContent=coins;
+
+ const progress=Math.min(100,(moves/Math.max(1,level*8))*100);
+ $("progressBar").style.width=progress+"%";
+ $("levelText").textContent="NIVEAU "+level;
+
+ const board=$("board");
+ board.innerHTML="";
+
+ tubes.forEach((tube,index)=>{
+  const element=document.createElement("div");
+
+  element.className="tube"+(selected===index?" selected":"");
+
+  tube.forEach(color=>{
+   const ball=document.createElement("div");
+   ball.className="ball";
+   ball.style.background=COLORS[color];
+   element.appendChild(ball);
+  });
+
+  element.addEventListener("click",()=>clickTube(index));
+
+  board.appendChild(element);
+ });
+}
+
+function clickTube(index){
+ if(completed)return;
+
+ // Le premier toucher autorise le son sur iPhone et Android.
+ if(!soundEnabled){
+  activateSound();
+ }
+
+ if(selected===null){
+  if(!tubes[index].length)return;
+
+  selected=index;
+  soundSelect();
+  update();
+  return;
+ }
+
+ if(selected===index){
   selected=null;
   update();
+  return;
+ }
+
+ const from=tubes[selected];
+ const to=tubes[index];
+
+ if(from.length&&to.length<CAPACITY){
+  const color=from[from.length-1];
+
+  if(!to.length||to[to.length-1]===color){
+   history.push(copy(tubes));
+
+   to.push(from.pop());
+   moves++;
+
+   soundMove();
+  }else{
+   soundError();
+   $("message").textContent="Tu ne peux pas mélanger ces couleurs !";
+  }
+ }
+
+ selected=null;
+ update();
+ checkWin();
 }
 
-function restart() {
-  if (completed) return;
+function checkWin(){
+ if(!solved(tubes))return;
 
-  tubes=copyTubes(initialTubes);
-  moves=0;
-  selected=null;
-  history=[];
-  update();
+ completed=true;
+ coins+=20;
 
-  document.getElementById("message").textContent =
-    "Niveau recommencé !";
+ localStorage.setItem("cs_coins",coins);
+ localStorage.setItem("cs_level",level+1);
+
+ $("message").textContent="🎉 BRAVO ! +20 PIÈCES";
+
+ soundVictory();
+
+ $("winModal").classList.add("show");
+ update();
 }
 
-function nextLevel() {
-  if (completed) return;
+function closeWin(){
+ $("winModal").classList.remove("show");
 
-  level++;
-  localStorage.setItem("colorSortLevel",level);
-  newGame();
+ level++;
+ localStorage.setItem("cs_level",level);
 
-  document.getElementById("message").textContent =
-    "⭐ Nouveau niveau !";
+ start();
 }
 
-newGame();
+function undo(){
+ if(completed||!history.length)return;
+
+ tubes=history.pop();
+ moves=Math.max(0,moves-1);
+ selected=null;
+
+ soundUndo();
+ update();
+}
+
+function restart(){
+ if(completed)return;
+
+ tubes=copy(initial);
+ moves=0;
+ history=[];
+ selected=null;
+
+ update();
+ $("message").textContent="Niveau recommencé !";
+
+ playEffect(420,0.12,0.05);
+}
+
+function nextLevel(){
+ if(completed)return;
+
+ level++;
+ localStorage.setItem("cs_level",level);
+
+ start();
+
+ $("message").textContent="⭐ Nouveau défi !";
+ playEffect(700,0.16,0.06);
+}
+
+function addTube(){
+ if(completed)return;
+
+ if(coins<50){
+  $("message").textContent="Il te faut 50 pièces pour acheter un tube.";
+  soundError();
+  return;
+ }
+
+ coins-=50;
+ extraTubes++;
+
+ localStorage.setItem("cs_coins",coins);
+
+ tubes.push([]);
+ initial=copy(tubes);
+
+ update();
+
+ $("message").textContent="🧪 Nouveau tube ajouté !";
+ playEffect(850,0.16,0.07);
+}
+
+/* -----------------------------
+   DEMARRAGE
+----------------------------- */
+
+updateSoundButton();
+start();
+
 </script>
 </body>
 </html>
