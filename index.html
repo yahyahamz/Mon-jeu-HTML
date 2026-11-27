@@ -18,7 +18,7 @@ body {
   min-height: 100vh;
   font-family: Arial, sans-serif;
   color: white;
-  background: radial-gradient(circle at top, #293d72, #10152d 70%);
+  background: radial-gradient(circle at top, #293d72, #10152d 75%);
   display: flex;
   justify-content: center;
   overflow-x: hidden;
@@ -95,10 +95,8 @@ h1 {
   justify-content: flex-start;
   padding: 5px 4px 7px;
   cursor: pointer;
-  position: relative;
   background: linear-gradient(90deg, #ffffff12, #ffffff05, #ffffff20);
-  box-shadow: inset 0 -8px 15px #ffffff12,
-              0 12px 20px #0005;
+  box-shadow: inset 0 -8px 15px #ffffff12, 0 12px 20px #0005;
   transition: transform .2s, border-color .2s;
 }
 
@@ -120,7 +118,7 @@ h1 {
 
 .controls {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   margin-top: 25px;
   flex-wrap: wrap;
   justify-content: center;
@@ -128,9 +126,9 @@ h1 {
 
 button {
   border: 0;
-  padding: 14px 21px;
+  padding: 13px 17px;
   border-radius: 13px;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: bold;
   color: #14203b;
   background: linear-gradient(135deg, #62e8db, #8bafff);
@@ -151,7 +149,7 @@ button:active {
 }
 
 .ad-space {
-  margin-top: auto;
+  margin-top: 35px;
   min-height: 70px;
   width: 100%;
   border: 1px dashed #ffffff35;
@@ -161,7 +159,6 @@ button:active {
   justify-content: center;
   color: #8394ba;
   font-size: 12px;
-  margin-top: 35px;
 }
 
 @media(max-width: 360px) {
@@ -179,6 +176,7 @@ button:active {
 
 <body>
 <div class="game">
+
   <h1>COLOR SORT 3D</h1>
   <div class="subtitle">Trie les couleurs pour gagner !</div>
 
@@ -193,14 +191,17 @@ button:active {
   <div class="controls">
     <button onclick="undo()">↶ Annuler</button>
     <button onclick="restart()">↻ Recommencer</button>
-    <button onclick="newGame()">Nouveau niveau</button>
+    <button onclick="nextLevel()">Niveau suivant ➜</button>
   </div>
 
-  <div class="message" id="message">Choisis un tube pour commencer.</div>
+  <div class="message" id="message">
+    Choisis un tube pour commencer.
+  </div>
 
   <div class="ad-space">
     Espace réservé à la publicité
   </div>
+
 </div>
 
 <script>
@@ -211,11 +212,19 @@ const colors = [
 ];
 
 const CAPACITY = 4;
+const STORAGE_LEVEL = "colorSortLevel";
+const STORAGE_RECORD = "colorSortRecord";
+
+let level = Math.max(
+  1, Number(localStorage.getItem(STORAGE_LEVEL)) || 1
+);
+
 let tubes = [];
+let initialTubes = [];
 let selected = null;
 let moves = 0;
-let level = 1;
 let history = [];
+let completed = false;
 
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -225,43 +234,118 @@ function shuffle(array) {
   return array;
 }
 
-function newGame() {
+function copyTubes(value) {
+  return value.map(tube => [...tube]);
+}
+
+// Génère un puzzle en partant d'une solution.
+// Chaque mouvement de mélange reste légal :
+// le puzzle obtenu peut donc toujours être résolu.
+
+function generatePuzzle() {
   const count = Math.min(3 + level, colors.length);
-  const balls = [];
+
+  const solved = [];
 
   for (let i = 0; i < count; i++) {
-    for (let j = 0; j < CAPACITY; j++) {
-      balls.push(i);
+    solved.push([i, i, i, i]);
+  }
+
+  solved.push([]);
+  solved.push([]);
+
+  let puzzle;
+  let previousMove = null;
+
+  do {
+    puzzle = copyTubes(solved);
+    previousMove = null;
+
+    const scrambleMoves = 35 + count * 12 + level * 3;
+
+    for (let step = 0; step < scrambleMoves; step++) {
+      const possible = [];
+
+      for (let from = 0; from < puzzle.length; from++) {
+        if (puzzle[from].length === 0) continue;
+
+        for (let to = 0; to < puzzle.length; to++) {
+          if (from === to) continue;
+          if (puzzle[to].length >= CAPACITY) continue;
+
+          const color = puzzle[from][puzzle[from].length - 1];
+
+          if (
+            puzzle[to].length === 0 ||
+            puzzle[to][puzzle[to].length - 1] === color
+          ) {
+            if (
+              previousMove &&
+              previousMove.from === to &&
+              previousMove.to === from
+            ) {
+              continue;
+            }
+
+            possible.push({ from, to });
+          }
+        }
+      }
+
+      if (possible.length === 0) break;
+
+      const move = possible[
+        Math.floor(Math.random() * possible.length)
+      ];
+
+      puzzle[move.to].push(puzzle[move.from].pop());
+
+      previousMove = move;
     }
-  }
 
-  shuffle(balls);
+  } while (isSolved(puzzle));
 
-  tubes = [];
-  for (let i = 0; i < count; i++) {
-    tubes.push(balls.slice(i * CAPACITY, (i + 1) * CAPACITY));
-  }
+  return puzzle;
+}
 
-  tubes.push([]);
-  tubes.push([]);
+function isSolved(state) {
+  return state.every(tube =>
+    tube.length === 0 ||
+    (
+      tube.length === CAPACITY &&
+      tube.every(color => color === tube[0])
+    )
+  );
+}
 
+function newGame() {
+  tubes = generatePuzzle();
+  initialTubes = copyTubes(tubes);
   moves = 0;
   selected = null;
   history = [];
+  completed = false;
+
   update();
+
+  document.getElementById("message").textContent =
+    "Choisis un tube pour commencer.";
 }
 
 function update() {
   document.getElementById("level").textContent = level;
+
   document.getElementById("moves").textContent = moves;
+
   document.getElementById("record").textContent =
-    localStorage.getItem("colorSortRecord") || 1;
+    localStorage.getItem(STORAGE_RECORD) || 1;
 
   const board = document.getElementById("board");
   board.innerHTML = "";
 
   tubes.forEach((tube, index) => {
     const element = document.createElement("div");
+
     element.className = "tube" +
       (selected === index ? " selected" : "");
 
@@ -273,15 +357,19 @@ function update() {
     });
 
     element.onclick = () => clickTube(index);
+
     board.appendChild(element);
   });
 }
 
 function clickTube(index) {
+  if (completed) return;
+
   document.getElementById("message").textContent = "";
 
   if (selected === null) {
     if (tubes[index].length === 0) return;
+
     selected = index;
     update();
     return;
@@ -299,8 +387,12 @@ function clickTube(index) {
   if (from.length > 0 && to.length < CAPACITY) {
     const color = from[from.length - 1];
 
-    if (to.length === 0 || to[to.length - 1] === color) {
-      history.push(JSON.stringify(tubes));
+    if (
+      to.length === 0 ||
+      to[to.length - 1] === color
+    ) {
+      history.push(copyTubes(tubes));
+
       to.push(from.pop());
       moves++;
     }
@@ -312,54 +404,69 @@ function clickTube(index) {
 }
 
 function checkWin() {
-  const won = tubes.every(tube =>
-    tube.length === 0 ||
-    (tube.length === CAPACITY &&
-     tube.every(color => color === tube[0]))
+  if (!isSolved(tubes)) return;
+
+  completed = true;
+
+  document.getElementById("message").textContent =
+    "🎉 Bravo ! Niveau terminé !";
+
+  const record = Math.max(
+    level,
+    Number(localStorage.getItem(STORAGE_RECORD)) || 1
   );
 
-  if (won) {
+  localStorage.setItem(STORAGE_RECORD, record);
+
+  document.getElementById("record").textContent = record;
+
+  level++;
+  localStorage.setItem(STORAGE_LEVEL, level);
+
+  setTimeout(() => {
+    newGame();
     document.getElementById("message").textContent =
-      "🎉 Bravo ! Niveau terminé !";
-
-    const record = Math.max(
-      level,
-      Number(localStorage.getItem("colorSortRecord") || 1)
-    );
-
-    localStorage.setItem("colorSortRecord", record);
-
-    setTimeout(() => {
-      level++;
-      newGame();
-      document.getElementById("message").textContent =
-        "⭐ Niveau suivant !";
-    }, 1400);
-  }
+      "⭐ Bien joué ! Voici le niveau suivant.";
+  }, 1800);
 }
 
 function undo() {
-  if (history.length === 0) return;
+  if (completed || history.length === 0) return;
 
-  tubes = JSON.parse(history.pop());
+  tubes = history.pop();
   moves = Math.max(0, moves - 1);
   selected = null;
+
   update();
 }
 
 function restart() {
-  if (history.length > 0) {
-    tubes = JSON.parse(history[0]);
-    moves = 0;
-    history = [];
-    selected = null;
-    update();
-  } else {
+  if (completed) return;
+
+  tubes = copyTubes(initialTubes);
+  moves = 0;
+  selected = null;
+  history = [];
+
+  update();
+
+  document.getElementById("message").textContent =
+    "Niveau recommencé !";
+}
+
+function nextLevel() {
+  if (!completed) {
+    level++;
+    localStorage.setItem(STORAGE_LEVEL, level);
     newGame();
+
+    document.getElementById("message").textContent =
+      "⭐ Nouveau niveau !";
   }
 }
 
 newGame();
 </script>
+
 </body>
 </html>
