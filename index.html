@@ -1,60 +1,365 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#101820">
-<title>Super Course</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#10152d">
+<title>Color Sort 3D</title>
+
 <style>
-*{box-sizing:border-box}body{margin:0;background:#101820;color:#fff;font-family:Arial,sans-serif;text-align:center;overflow:hidden}
-header{padding:8px}h1{margin:3px;color:#ffd54a;font-size:25px}#hud{display:flex;justify-content:center;gap:18px;margin:6px;font-weight:bold}
-#game{display:block;width:min(100vw,520px);height:min(66vh,700px);margin:auto;border:3px solid #d5dce2;border-radius:12px;background:#39813d;touch-action:none}
-.controls{width:min(100vw,520px);margin:8px auto;display:flex;justify-content:space-around;gap:12px}
-button{border:0;border-radius:14px;padding:12px 18px;font-size:16px;font-weight:bold;background:#ffd54a;color:#18212a;touch-action:manipulation}
-.controls button{width:44%;font-size:21px}.small{padding:9px 13px;font-size:14px}#message{font-size:12px;color:#dce6ee;margin:5px}
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  color: white;
+  background: radial-gradient(circle at top, #293d72, #10152d 70%);
+  display: flex;
+  justify-content: center;
+  overflow-x: hidden;
+}
+
+.game {
+  width: 100%;
+  max-width: 500px;
+  min-height: 100vh;
+  padding: 25px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  font-size: 34px;
+  margin: 15px 0 5px;
+  font-weight: 900;
+  background: linear-gradient(90deg, #40e0d0, #ffdb70);
+  color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  color: #b9c9ed;
+  margin-bottom: 20px;
+}
+
+.stats {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  background: #ffffff12;
+  border: 1px solid #ffffff20;
+  padding: 14px;
+  border-radius: 16px;
+  margin-bottom: 25px;
+}
+
+.stat {
+  text-align: center;
+  font-size: 13px;
+  color: #b9c9ed;
+}
+
+.stat strong {
+  display: block;
+  font-size: 21px;
+  color: white;
+  margin-top: 5px;
+}
+
+#board {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 22px 15px;
+  padding: 15px 0;
+  min-height: 300px;
+}
+
+.tube {
+  width: 55px;
+  height: 170px;
+  border: 3px solid #d5e5ff99;
+  border-top: 0;
+  border-radius: 0 0 23px 23px;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 5px 4px 7px;
+  cursor: pointer;
+  position: relative;
+  background: linear-gradient(90deg, #ffffff12, #ffffff05, #ffffff20);
+  box-shadow: inset 0 -8px 15px #ffffff12,
+              0 12px 20px #0005;
+  transition: transform .2s, border-color .2s;
+}
+
+.tube.selected {
+  transform: translateY(-13px);
+  border-color: #ffe66d;
+}
+
+.ball {
+  width: 40px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  margin-top: -1px;
+  box-shadow: inset -5px -5px 8px #0003,
+              inset 4px 4px 8px #ffffff66,
+              0 2px 4px #0004;
+}
+
+.controls {
+  display: flex;
+  gap: 12px;
+  margin-top: 25px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+button {
+  border: 0;
+  padding: 14px 21px;
+  border-radius: 13px;
+  font-size: 15px;
+  font-weight: bold;
+  color: #14203b;
+  background: linear-gradient(135deg, #62e8db, #8bafff);
+  cursor: pointer;
+  box-shadow: 0 5px 15px #0004;
+}
+
+button:active {
+  transform: scale(.96);
+}
+
+.message {
+  margin-top: 20px;
+  min-height: 28px;
+  color: #ffe66d;
+  text-align: center;
+  font-weight: bold;
+}
+
+.ad-space {
+  margin-top: auto;
+  min-height: 70px;
+  width: 100%;
+  border: 1px dashed #ffffff35;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #8394ba;
+  font-size: 12px;
+  margin-top: 35px;
+}
+
+@media(max-width: 360px) {
+  .tube {
+    width: 48px;
+    height: 155px;
+  }
+  .ball {
+    width: 34px;
+    height: 30px;
+  }
+}
 </style>
 </head>
+
 <body>
-<header><h1>🏁 SUPER COURSE 🏁</h1><div id="hud"><span>Score : <b id="score">0</b></span><span>Vitesse : <b id="speed">1</b></span><span>Record : <b id="best">0</b></span></div></header>
-<canvas id="game" width="480" height="700"></canvas>
-<div class="controls"><button id="left">⬅️ GAUCHE</button><button id="right">DROITE ➡️</button></div>
-<div><button id="restart" class="small">↻ Recommencer</button> <button id="sound" class="small">🔊 Son : activé</button></div>
-<div id="message">Évite les voitures ! Flèches du clavier ou boutons tactiles.</div>
+<div class="game">
+  <h1>COLOR SORT 3D</h1>
+  <div class="subtitle">Trie les couleurs pour gagner !</div>
+
+  <div class="stats">
+    <div class="stat">NIVEAU<strong id="level">1</strong></div>
+    <div class="stat">COUPS<strong id="moves">0</strong></div>
+    <div class="stat">RECORD<strong id="record">1</strong></div>
+  </div>
+
+  <div id="board"></div>
+
+  <div class="controls">
+    <button onclick="undo()">↶ Annuler</button>
+    <button onclick="restart()">↻ Recommencer</button>
+    <button onclick="newGame()">Nouveau niveau</button>
+  </div>
+
+  <div class="message" id="message">Choisis un tube pour commencer.</div>
+
+  <div class="ad-space">
+    Espace réservé à la publicité
+  </div>
+</div>
+
 <script>
-(()=>{
-const canvas=document.getElementById('game'),ctx=canvas.getContext('2d'),W=480,H=700;
-const scoreEl=document.getElementById('score'),speedEl=document.getElementById('speed'),bestEl=document.getElementById('best');
-let best=0;try{best=+(localStorage.getItem('superCourseBest')||0)}catch(e){}bestEl.textContent=best;
-const lanes=[145,240,335];let player={x:240,lane:1,y:570},traffic=[],score=0,speed=1,offset=0,frame=0,over=false,crashPlayed=false;
-let audio=null,engine=null,engineGain=null,soundOn=true;
-function audioStart(){if(!soundOn)return;try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;if(!audio){audio=new AC();engine=audio.createOscillator();let filter=audio.createBiquadFilter();engineGain=audio.createGain();engine.type='sawtooth';filter.type='lowpass';filter.frequency.value=400;engine.connect(filter);filter.connect(engineGain);engineGain.connect(audio.destination);engineGain.gain.value=.0001;engine.start()}if(audio.state==='suspended')audio.resume();if(!over)engineGain.gain.setTargetAtTime(.025,audio.currentTime,.08)}catch(e){}}
-function engineUpdate(){if(audio&&engine&&soundOn&&!over){engine.frequency.setTargetAtTime(65+speed*23,audio.currentTime,.1);engineGain.gain.setTargetAtTime(.015+speed*.003,audio.currentTime,.1)}}
-function crashSound(){if(!soundOn)return;audioStart();if(!audio)return;try{let n=Math.floor(audio.sampleRate*.35),b=audio.createBuffer(1,n,audio.sampleRate),d=b.getChannelData(0);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*(1-i/n);let s=audio.createBufferSource(),g=audio.createGain();s.buffer=b;g.gain.value=.4;s.connect(g);g.connect(audio.destination);s.start();if(engineGain)engineGain.gain.setTargetAtTime(.0001,audio.currentTime,.02)}catch(e){}}
-function rect(x,y,w,h,r,c){ctx.fillStyle=c;ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fill()}
-function car(x,y,color,hero){ctx.fillStyle='rgba(0,0,0,.25)';ctx.beginPath();ctx.ellipse(x,y+24,31,11,0,0,7);ctx.fill();
-rect(x-29,y-27,10,25,4,'#101114');rect(x+19,y-27,10,25,4,'#101114');rect(x-29,y+9,10,25,4,'#101114');rect(x+19,y+9,10,25,4,'#101114');
-ctx.fillStyle=color;ctx.beginPath();ctx.moveTo(x-23,y+30);ctx.lineTo(x-27,y-13);ctx.quadraticCurveTo(x-25,y-36,x-13,y-39);ctx.lineTo(x+13,y-39);ctx.quadraticCurveTo(x+25,y-36,x+27,y-13);ctx.lineTo(x+23,y+30);ctx.quadraticCurveTo(x,y+38,x-23,y+30);ctx.fill();
-ctx.fillStyle='#bfeaff';ctx.beginPath();ctx.moveTo(x-17,y-13);ctx.lineTo(x-12,y-31);ctx.lineTo(x+12,y-31);ctx.lineTo(x+17,y-13);ctx.closePath();ctx.fill();rect(x-17,y-8,34,17,5,'#263746');rect(x-18,y+23,9,5,2,'#fff0c2');rect(x+9,y+23,9,5,2,'#fff0c2');
-if(hero)rect(x-8,y+5,16,5,2,'#8c1010')}
-function draw(){ctx.clearRect(0,0,W,H);ctx.fillStyle='#39813d';ctx.fillRect(0,0,W,H);
-for(let y=-30+(offset%100);y<H;y+=100){ctx.fillStyle='#23652e';ctx.beginPath();ctx.arc(38,y,17,0,7);ctx.fill();ctx.beginPath();ctx.arc(442,y+35,17,0,7);ctx.fill()}
-ctx.fillStyle='#45494f';ctx.fillRect(88,0,304,H);ctx.fillStyle='#f6f0d7';ctx.fillRect(88,0,7,H);ctx.fillRect(385,0,7,H);
-for(let y=-70+(offset%90);y<H;y+=90){ctx.fillStyle='#eee';ctx.fillRect(188,y,6,48);ctx.fillRect(286,y,6,48)}
-traffic.forEach(c=>car(c.x,c.y,c.color,false));car(player.x,player.y,'#e32636',true);
-if(over){ctx.fillStyle='rgba(0,0,0,.7)';ctx.fillRect(0,0,W,H);ctx.fillStyle='white';ctx.font='bold 46px Arial';ctx.fillText('CRASH !',145,310);ctx.font='bold 23px Arial';ctx.fillText('Score : '+Math.floor(score),177,355);ctx.font='18px Arial';ctx.fillText('Appuie sur Recommencer',118,395)}}
-function finish(){if(over)return;over=true;if(!crashPlayed){crashSound();crashPlayed=true}if(Math.floor(score)>best){best=Math.floor(score);bestEl.textContent=best;try{localStorage.setItem('superCourseBest',best)}catch(e){}}}
-function loop(){if(!over){frame++;speed=Math.min(8,1+score/350);offset+=3+speed*1.6;if(frame%Math.max(28,78-Math.floor(speed*5))===0){let l=Math.floor(Math.random()*3);traffic.push({x:lanes[l],y:-70,color:['#2785dc','#f3bd28','#8d59c7','#eee'][Math.floor(Math.random()*4)]})}
-traffic.forEach(c=>c.y+=3+speed*1.7);traffic=traffic.filter(c=>c.y<H+80);for(const c of traffic)if(Math.abs(c.x-player.x)<43&&Math.abs(c.y-player.y)<58){finish();break}
-score+=.12*speed;scoreEl.textContent=Math.floor(score);speedEl.textContent=speed.toFixed(1);engineUpdate()}
-draw();requestAnimationFrame(loop)}
-function move(d){audioStart();if(over)return;player.lane=Math.max(0,Math.min(2,player.lane+d));player.x=lanes[player.lane]}
-document.getElementById('left').addEventListener('pointerdown',()=>move(-1));document.getElementById('right').addEventListener('pointerdown',()=>move(1));
-document.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='a')move(-1);if(e.key==='ArrowRight'||e.key==='d')move(1);if(e.key===' '&&over)reset()});
-function reset(){audioStart();score=0;speed=1;frame=0;traffic=[];over=false;crashPlayed=false;player.lane=1;player.x=lanes[1];scoreEl.textContent='0'}
-document.getElementById('restart').addEventListener('click',reset);
-document.getElementById('sound').addEventListener('click',()=>{soundOn=!soundOn;document.getElementById('sound').textContent=soundOn?'🔊 Son : activé':'🔇 Son : coupé';if(soundOn)audioStart();else if(engineGain&&audio)engineGain.gain.setTargetAtTime(.0001,audio.currentTime,.04)});
-canvas.addEventListener('pointerdown',audioStart);document.addEventListener('visibilitychange',()=>{if(audio){if(document.hidden)audio.suspend();else if(soundOn)audio.resume()}});
-loop();
-})();
+const colors = [
+  "#ff4d6d", "#38bdf8", "#facc15",
+  "#a78bfa", "#34d399", "#fb923c",
+  "#f472b6", "#a3e635"
+];
+
+const CAPACITY = 4;
+let tubes = [];
+let selected = null;
+let moves = 0;
+let level = 1;
+let history = [];
+
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+function newGame() {
+  const count = Math.min(3 + level, colors.length);
+  const balls = [];
+
+  for (let i = 0; i < count; i++) {
+    for (let j = 0; j < CAPACITY; j++) {
+      balls.push(i);
+    }
+  }
+
+  shuffle(balls);
+
+  tubes = [];
+  for (let i = 0; i < count; i++) {
+    tubes.push(balls.slice(i * CAPACITY, (i + 1) * CAPACITY));
+  }
+
+  tubes.push([]);
+  tubes.push([]);
+
+  moves = 0;
+  selected = null;
+  history = [];
+  update();
+}
+
+function update() {
+  document.getElementById("level").textContent = level;
+  document.getElementById("moves").textContent = moves;
+  document.getElementById("record").textContent =
+    localStorage.getItem("colorSortRecord") || 1;
+
+  const board = document.getElementById("board");
+  board.innerHTML = "";
+
+  tubes.forEach((tube, index) => {
+    const element = document.createElement("div");
+    element.className = "tube" +
+      (selected === index ? " selected" : "");
+
+    tube.forEach(color => {
+      const ball = document.createElement("div");
+      ball.className = "ball";
+      ball.style.background = colors[color];
+      element.appendChild(ball);
+    });
+
+    element.onclick = () => clickTube(index);
+    board.appendChild(element);
+  });
+}
+
+function clickTube(index) {
+  document.getElementById("message").textContent = "";
+
+  if (selected === null) {
+    if (tubes[index].length === 0) return;
+    selected = index;
+    update();
+    return;
+  }
+
+  if (selected === index) {
+    selected = null;
+    update();
+    return;
+  }
+
+  const from = tubes[selected];
+  const to = tubes[index];
+
+  if (from.length > 0 && to.length < CAPACITY) {
+    const color = from[from.length - 1];
+
+    if (to.length === 0 || to[to.length - 1] === color) {
+      history.push(JSON.stringify(tubes));
+      to.push(from.pop());
+      moves++;
+    }
+  }
+
+  selected = null;
+  update();
+  checkWin();
+}
+
+function checkWin() {
+  const won = tubes.every(tube =>
+    tube.length === 0 ||
+    (tube.length === CAPACITY &&
+     tube.every(color => color === tube[0]))
+  );
+
+  if (won) {
+    document.getElementById("message").textContent =
+      "🎉 Bravo ! Niveau terminé !";
+
+    const record = Math.max(
+      level,
+      Number(localStorage.getItem("colorSortRecord") || 1)
+    );
+
+    localStorage.setItem("colorSortRecord", record);
+
+    setTimeout(() => {
+      level++;
+      newGame();
+      document.getElementById("message").textContent =
+        "⭐ Niveau suivant !";
+    }, 1400);
+  }
+}
+
+function undo() {
+  if (history.length === 0) return;
+
+  tubes = JSON.parse(history.pop());
+  moves = Math.max(0, moves - 1);
+  selected = null;
+  update();
+}
+
+function restart() {
+  if (history.length > 0) {
+    tubes = JSON.parse(history[0]);
+    moves = 0;
+    history = [];
+    selected = null;
+    update();
+  } else {
+    newGame();
+  }
+}
+
+newGame();
 </script>
-</body></html>
+</body>
+</html>
